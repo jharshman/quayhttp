@@ -18,8 +18,18 @@ func (c *Client)Address() string {
   return addr
 }
 
-func (c *Client)NewRequest(method, requestPath string) *http.Request {
+func (c *Client)HTTPClient() *http.Client {
+  if c.HTTPClient == nil {
+    c.HTTPClient = &http.Client{}
+  }
+}
+
+func (c *Client)NewRequest(ctx, method, requestPath string) *http.Request {
   // create the request to send
+  req, _ := http.NewRequest(method, c.Address(), nil)
+  req = req.WithContext(ctx)
+
+  return req
 }
 
 func (c *Client)DoRequest() {
